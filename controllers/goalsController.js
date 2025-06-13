@@ -19,25 +19,26 @@ const getUserGoals = async (userId) => {
         },
         {
           model: Cause,
+          as: "Cause",
           attributes: ["id", "name", "emoji", "conversionRate"],
         },
       ],
       order: [["createdAt", "DESC"]],
     });
 
-    res.json({
+    return {
       success: true,
       data: goals.map((goal) => ({
         ...goal.get({ plain: true }),
         progress: calculateProgress(goal),
       })),
-    });
+    };
   } catch (error) {
     console.error("Error fetching goals:", error);
-    res.status(500).json({
+    return {
       success: false,
       error: "Failed to fetch goals",
-    });
+    };
   }
 };
 

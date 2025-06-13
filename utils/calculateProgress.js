@@ -1,4 +1,4 @@
-export const calculateProgress = (goal) => {
+const calculateProgress = (goal) => {
   const totalCheckins =
     goal.Checkins?.reduce((sum, c) => sum + c.value, 0) || 0;
   const percentage = Math.min(
@@ -13,3 +13,5 @@ export const calculateProgress = (goal) => {
     frequencyUnit: goal.frequencyUnit,
   };
 };
+
+module.exports = { calculateProgress };

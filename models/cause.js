@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 100,
         allowNull: false,
       },
+      currentTotal: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+        allowNull: false,
+      },
     },
     {
       sequelize,

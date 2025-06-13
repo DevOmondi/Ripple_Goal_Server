@@ -1,8 +1,28 @@
-const { createNewGoal } = require("../controllers/goalsController");
-const { decodeId } = require("../utils/hashids");
-
 const express = require("express");
 const router = express.Router();
+
+const {
+  createNewGoal,
+  getUserGoals,
+} = require("../controllers/goalsController");
+const { decodeId } = require("../utils/hashids");
+
+router.get("/", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    // const decodedUserId = decodeId(userId);
+    const userGoals = await getUserGoals(userId);
+
+    if (!userGoals.success) {
+      return res.status(500).json({ success: false, error: userGoals.error });
+    }
+
+    return res.status(200).json(userGoals);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
 
 router.post("/create-goal", async (req, res) => {
   try {
