@@ -1,4 +1,4 @@
-const { Goal, Checkin, Cause } = require("../models");
+const { Goal, Checkin, Cause, Milestone } = require("../models");
 const { calculateProgress } = require("../utils/calculateProgress");
 
 const createNewGoal = async (goalData) => {
@@ -20,7 +20,18 @@ const getUserGoals = async (userId) => {
         {
           model: Cause,
           as: "Cause",
-          attributes: ["id", "name", "emoji", "conversionRate"],
+          attributes: ["id", "name", "emoji", "conversionRate", "currentTotal"],
+          include: [
+            {
+              model: Milestone,
+              as: "Milestones",
+              attributes: ["id", "targetValue", "action"],
+              order: [["targetValue", "ASC"]],
+              where: {},
+              limit: 10,
+              required: false,
+            },
+          ],
         },
       ],
       order: [["createdAt", "DESC"]],
@@ -31,6 +42,8 @@ const getUserGoals = async (userId) => {
       data: goals.map((goal) => ({
         ...goal.get({ plain: true }),
         progress: calculateProgress(goal),
+        // Add next milestone info to each goal
+        nextMilestone: goal.Cause?.Milestones?.[0] || null,
       })),
     };
   } catch (error) {

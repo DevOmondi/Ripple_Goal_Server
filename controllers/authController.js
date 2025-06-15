@@ -38,7 +38,22 @@ const createUser = async (name, email) => {
   }
 };
 
+const loginUser = async (email) => {
+  try {
+    // check if user exists
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    return user;
+  } catch (error) {
+    console.error("Failed to login user:", error);
+    throw new Error("Failed to login user");
+  }
+};
+
 module.exports = {
   sendWelcomeEmail,
   createUser,
+  loginUser
 };

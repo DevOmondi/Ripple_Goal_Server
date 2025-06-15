@@ -10,8 +10,8 @@ const { decodeId } = require("../utils/hashids");
 router.get("/", async (req, res) => {
   try {
     const { userId } = req.query;
-    // const decodedUserId = decodeId(userId);
-    const userGoals = await getUserGoals(userId);
+    const decodedUserId = decodeId(userId);
+    const userGoals = await getUserGoals(decodedUserId);
 
     if (!userGoals.success) {
       return res.status(500).json({ success: false, error: userGoals.error });

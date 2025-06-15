@@ -3,7 +3,7 @@ const router = express.Router();
 const { encodeId } = require("../utils/hashids");
 
 const { sendWelcomeEmail } = require("../controllers/authController");
-const { createUser } = require("../controllers/authController");
+const { createUser, loginUser } = require("../controllers/authController");
 
 router.post("/send-welcome-email", async (req, res) => {
   // console.log("Received request to send welcome email");
@@ -36,6 +36,24 @@ router.post("/create-user", async (req, res) => {
       message: "User created successfully",
       user_id: user_id,
     });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+router.post("/login-user", async (req, res) => {
+  // console.log("Received request to login user");
+  const { email } = req.body;
+  try {
+    const user = await loginUser(email);
+    const user_id = encodeId(user.id);
+    return res
+      .status(200)
+      .json({
+        success: true,
+        message: "User logged in successfully",
+        user_id: user_id,
+      });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
